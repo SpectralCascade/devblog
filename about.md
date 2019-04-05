@@ -4,12 +4,8 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
-
-### More Information
-
-A place to include any other types of information that you'd like to include about yourself.
+I'm a young game developer learning new stuff. Occasionally I dump information on my pet projects and various practical thoughts about programming on this blog :)
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[timlanesoftware.com@domainsbyproxy.com](mailto:timlanesoftware.com@domainsbyproxy.com)
