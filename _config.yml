@@ -84,3 +84,7 @@ exclude:
   - LICENSE
   - README.md
   - CNAME
+  
+# Additional plugins, such as a sitemap generator
+plugins:
+  - jekyll-sitemap
