@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Made with Ossium <span>#</span>11: Please Hold
+title: Made with Ossium: Please Hold
 ---
 
 A few days ago I took part in the [4th Extra Credits Game Jam](https://itch.io/jam/extra-credits-game-jam-4). It was the first game jam I've ever finished, and it was pretty fun! The theme was "Connect" and there were a whopping 314 entries, with a time period of about 4 days for people to make a game either as part of team or solo. I worked solo for the jam, and I quickly latched onto the idea of a game where you would play as a telephone switchboard operator. I figured that would enable me to combine both literal physical connection and social connection (though ultimately the game was more literal than I originally intended). I made the game using [Ossium](https://ossiumengine.net), the open source 2D game engine I'm developing, and (surprisingly) it worked out pretty well. I called the game "Please Hold" and you can [check it out here](https://spectralcascade.itch.io/please-hold).
