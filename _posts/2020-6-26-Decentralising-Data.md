@@ -18,4 +18,4 @@ The project aims to reform data usage online, in a decentralised approach where 
 
 This is a fantastic concept - as you can block or accept requests for data stored in your pod(s) as you wish. Imagine Google, Amazon, Facebook and others used Solid instead of storing user data on their own databases. We need legal changes on the level of GDPR to prevent general webservices storing personal data and force them to adopt such a decentralised approach, whether that's in the form of the Solid project or something similar.
 
-The future of our personal data should be in our hands, not corporations or governments. There is no alternative for the future of the internet; we need a more decentralised internet now. Checkout https://solidproject.org/
+The future of our personal data should be in our hands, not corporations or governments. There is no alternative for the future of the internet; we need a more decentralised internet now. Checkout [https://solidproject.org/](https://solidproject.org/)
