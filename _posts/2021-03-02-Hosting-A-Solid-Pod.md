@@ -169,7 +169,7 @@ $ sudo certbot-auto certonly --manual --preferred-challenges=dns --email mail@ho
 
 This may take a short time to run, but once it gets going you will be asked to create a `TXT` record for your domain and pasting in the values they give you (note, it should ask you to add two records, one for the root domain and one for the wildcard subdomains). This is a [DNS challenge](https://letsencrypt.org/docs/challenge-types/) that verifies the domain is genuinely pointing at the address of your pi. To set this up, you must once again go to the DNS records management page for the domain you're using (the same page the `A` records were added), but this time add a new `TXT` record. `certbot` should tell you what the name and value should be (though note that on GoDaddy at least, the name should just be the lowest level domain, i.e. just `_acme-challenge`). The value will be a unique generated string of characters you can copy and paste in. Once you've added the `TXT` record, you will have to wait a short time for DNS propagation as before. As long as the majority of nameservers are updated, it should be fine to continue - you can check the propagation of different records for a given domain at [https://www.whatsmydns.net](https://www.whatsmydns.net).
 
-![image-20210302155540359](../images/posts/txtrecords.png)
+![txtrecords](../images/posts/txtrecords.png)
 
 Once the changes have propagated to most of the nameservers, you can go ahead and continue with `certbot`.
 
