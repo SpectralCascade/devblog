@@ -3,7 +3,9 @@ layout: post
 title: Self-Hosting a Solid Pod
 ---
 
-You may recall my [previous (somewhat naive) article](https://timlanesoftware.com/Decentralising-Data/) where I talked about an exciting new-ish web technology [called Solid](https://solidproject.org/) spearheaded by Tim Berners Lee, widely known as the creator of the web. One of the main advantages of Solid pods is that you not only maintain control over which apps and services may access your personal data at any given time, but you can even self-host your pod(s) which store that data. This is a nice advantage over classic centralised server systems, as it means you can not only control access to your data _virtually_ but also _physically_, so you can do anything you want with it. By removing the middle-men typically responsible for looking after our data, you can have complete control over it. It also helps avoid issues with webservices shutting down and taking all your data with it, as you become primarily responsible for storing your own data. Or for example, in a rather unfortunate and somewhat ironic case, [a major Solid pod hosting service going down without much warning and taking user's WebIDs with it](https://lists.w3.org/Archives/Public/public-solid/2020Oct/0020.html) (though fortunately, the data was all backed up and shifted over to a new domain). This adds to the growing number of reasons everyone should have full control and responsibility over their data, down to the physical hardware you store it on. Of course, Solid also builds upon usage of [linked data and the semantic web](https://en.wikipedia.org/wiki/Semantic_Web). The bad news is - the bar of entry for setting up your own servers to connect to the web is a high one, and setting up a Solid server is no exception. While there is a [rudimentary guide to self-hosting a Solid pod server hidden away on the main website](https://solidproject.org//self-hosting/nss), it isn't immediately obvious how to do it. Perhaps in the future, setting up home internet servers and Solid pods will become a breeze, but until then I'm here to help you get started with a more detailed guide to hosting your own Solid pod on the cheap with a Raspberry Pi.
+You may recall my [previous (somewhat naive) article](https://timlanesoftware.com/Decentralising-Data/) where I talked about an exciting new-ish web technology [called Solid](https://solidproject.org/) spearheaded by Tim Berners Lee, widely known as the creator of the web. One of the main advantages of Solid pods is that you not only maintain control over which apps and services may access your personal data at any given time, but you can even self-host your pod(s) which store that data. This is a nice advantage over classic centralised server systems, as it means you can not only control access to your data _virtually_ but also _physically_, so you can do anything you want with it. By removing the middle-men typically responsible for looking after our data, you can have complete control over it. It also helps avoid issues with webservices shutting down and taking all your data with it, as you become primarily responsible for storing your own data. Or for example, in a rather unfortunate and somewhat ironic case, [a major Solid pod hosting service going down without much warning and taking user's WebIDs with it](https://lists.w3.org/Archives/Public/public-solid/2020Oct/0020.html) (though fortunately, the data was all backed up and shifted over to a new domain).
+
+This adds to the growing number of reasons everyone should have full control and responsibility over their data, down to the physical hardware you store it on. Of course, Solid also builds upon usage of [linked data and the semantic web](https://en.wikipedia.org/wiki/Semantic_Web). The bad news is - the bar of entry for setting up your own servers to connect to the web is a high one, and setting up a Solid server is no exception. While there is a [rudimentary guide to self-hosting a Solid pod server hidden away on the main website](https://solidproject.org//self-hosting/nss), it isn't immediately obvious how to do it. Perhaps in the future, setting up home internet servers and Solid pods will become a breeze, but until then I'm here to help you get started with a more detailed guide to hosting your own Solid pod on the cheap with a Raspberry Pi.
 
 ## What can I actually do with Solid, and how does it work?
 
@@ -44,40 +46,74 @@ In effect, these steps download Node (including `npm`, Node Package Manager), ex
 Once node-solid-server is installed, you need to configure it; change directory with `cd /var/www/` and make a new directory with the same name as your domain name e.g. `sudo mkdir your.host.example.org`, change directory `cd your.host.example.org` then run `sudo solid init`. This will follow with a set of questions to configure the server, which are generally self-explanatory; you can refer to the [official guide](https://solidproject.org//self-hosting/nss) which shows an example response. A brief explanation of the options (note, for options with default values, you can hit the enter/return key to use the default):
 
 - `* ? Path to the folder you want to serve. Default is (./data)` 
+  
   Specify the directory where all the user pods will be stored. Hit enter to use the default "data" folder.
+  
 - `? SSL port to run on. Default is (8443)`
+  
   Specify which port the server will run on. Unless you are already using port 8443 for something else, I recommend using the default.
+  
 - `? Solid server uri (with protocol, hostname and port)`
+  
   Specify what the root URL of the server will be _including_ the `https://` protocol prefix, e.g. `https://your.host.example.org`
 - `? Enable WebID authentication (y/N)`
+  
   Answer yes to this - you can only use external Solid web apps with your pod(s) if you have this enabled (effectively for single sign-on).
+  
 - `? Serve Solid on URL path`
+  
   Use current directory by default (assuming you are in `/var/www/your.host.example.org`).
+  
 - `? Path to the config directory (for example: /etc/solid-server) (./config)`
+  
   Fairly self-explanatory, contains some for the server to use, default is fine.
+  
 - `? Path to the config file (for example: ./config.json) (./config.json)`
+  
   Ditto.
+  
 - `? Path to the server metadata db directory (for users/apps etc) (./.db)`
+  
   Ditto.
+  
 - `? Path to the SSL private key in PEM format`
+  
   Here you must specify the file containing the private key used for HTTPS - we haven't generated this yet, but later on in this guide I will be using [Let's Encrypt](https://letsencrypt.org) for encryption and to obtain a SSL certificate for the site. For now enter `/etc/letsencrypt/live/your.host.example.org/privkey.pem`
+  
 - `? Path to the SSL certificate key in PEM format`
+  
   This is specifically for the SSL certificate, again this will be obtained later. For now enter `/etc/letsencrypt/live/your.host.example.org/fullchain.pem`
+  
 - `? Enable multi-user mode (y/N)` 
+  
   Depending on how you wish to use your pod, you may wish to support multiple pods for multiple users - meaning that each new user will have their own their own subdomain, making up their WebID. For example, if I created a new user "tim" then the WebID for that user would be https://tim.your.host.example.org. If you don't want anyone else to make their own user accounts, you can disable multi-user mode and there will only be one pod on the server with the WebID being the same as the domain name, i.e. https://your.host.example.org.
+  
 - `? Do you want to set up an email service (y/N)`
+  
   I won't be covering the email service in this guide, so I left it disabled.
+  
 - `A name for your server (not required)`
+  
   If you like you can name your server something; if you leave it undefined it defaults to the domain name.
+  
 - `? A description of your server (not requred)`
+  
   Optional server description.
+  
 - `? A logo (not required)`
+  
   Optional custom logo image path.
+  
 - `? Do you want to enforce Terms & Conditions for your service (y/N)`
+  
   If you expect other users to sign up to the server, this might be a good idea.
+  
 - `? Do you want to disable password strength checking (y/N)`
+  
   Self-explanatory, ensures users passwords are good when they sign up.
+  
 - `? The support email you provide for your users (not required)`
+  
   If you expect other users to sign up to the server, this will be public for them to contact if they need support.
 
 Once you finish initialising the server, a configuration file will be created.
@@ -92,7 +128,7 @@ First and foremost, you should set the hostname of your server to match the doma
 
 Once this is done, it's time to do some port forwarding. As the server can't be run easily on port 443 (the standard HTTPS port) due to permissions, the forwarding should map from external port 443 to internal port 8443 which the server uses. To do this, you need to find out the IP address of the server - you can either do this with the `ipconfig` command (though if you're SSH'd into the pi, you should know this already) or you might be able to see the address via your router settings page (probably accessible at 192.168.0.1 in your web browser). Once you're on the router settings page, navigate to your port forwarding settings (on Virgin hub 3.0 this is under Advanced Settings -> Security -> Port Forwarding, but this will differ between router models). As well as the external 443 to internal 8443 port mapping (TCP), you should forward external port 80 to internal port 80 (TCP) and optionally port 8080 in the same way, as these will allow the HTTP to HTTPS redirect service to work later. In this example the IP of my pi is `192.168.0.29`.
 
-![portforward](C:\Users\2013b\Git\devblog\images\posts\portforward.PNG)
+![portforward](../images/posts/portforward.PNG)
 
 Apply the changes, and things should be ready for assigning the domain name.
 
@@ -100,11 +136,11 @@ Apply the changes, and things should be ready for assigning the domain name.
 
 Once port forwarding is setup, we can go ahead and configure the domain name DNS. To do this, you'll need to navigate to the registrar site you bought your domain name from in a web browser and find the DNS records management page. This will differ between domain name registrars, but the general process is the same. For this guide I will show examples with GoDaddy.
 
- ![godnsmanage](C:\Users\2013b\Git\devblog\images\posts\godnsmanage.PNG)
+ ![godnsmanage](../images/posts/godnsmanage.PNG)
 
 Once on the DNS management page for your domain name, you should add two new `A` records. The first record should have the name set as the domain itself; in GoDaddy this is represented by the @ symbol, though this may differ between registrars. The value should be the public IP address of your internet gateway/router; this can be easily found via google by typing in "What is my IP" or going to [https://whatismyipaddress.com](https://whatismyipaddress.com) (assuming you are on the same local network as the server). 
 
-![setupdns](C:\Users\2013b\Git\devblog\images\posts\setupdns.PNG)
+![setupdns](../images/posts/setupdns.PNG)
 
 Once these `A` records are added, there's just one more key step to get the server working - setting up an SSL certificate. Leave the DNS records management page open for now as we'll come back to it shortly.
 
@@ -116,24 +152,24 @@ When you add or modify DNS records, the changes take some time to apply due to D
 
 A requirement of Solid pod servers is that they should provide HTTP over SSL (Secure Socket Layer) which ensures that all requests are securely encrypted. In order to verify this encryption, you need to get an SSL certificate and keep it up-to-date. While there are paid SSL certification services, you can easily setup SSL for free using [Let's Encrypt](https://letsencrypt.org). There is a [brief section in the official NSS setup guide](https://solidproject.org//self-hosting/nss) that details everything we need to download, install and run `certbot-auto` to verify both the root domain and wildcard subdomain certificates, though I've noticed a couple of issues with it so I've made some changes - follow these steps on the pi:
 
-```
+~~~~~~~~
 $ wget https://dl.eff.org/certbot-auto
 $ sudo mv certbot-auto /usr/local/bin/certbot-auto
 $ sudo chown root /usr/local/bin/certbot-auto
 $ sudo chmod 0755 /usr/local/bin/certbot-auto
-```
+~~~~~~~~
 
 First the certification program `certbot-auto` is downloaded, moved into the user's local binaries directory (so it can be run from anywhere) before changing the ownership to the root user and setting appropriate permissions. Note - if this or the next step doesn't work, take a look at [the official certbot instructions](https://certbot.eff.org/instructions) and choose the system that best matches the Linux distro your pi uses.
 
 Now we run `certbot-auto` with `--manual` and `--agree-tos` set so we can manually verify the domain and automatically agree to the terms of service respectively. We also set `--preferred-challenges=dns` such that the domain validation can be done via `TXT` records in our domain DNS settings. We must also set an email address to register (also for recovery in case of a problem), using `--email` followed by any contact addresses (in this example `mail@host.com` should be replaced by your actual email address). We also specify the web server used to verify the DNS challenges with `--server` followed by the URL; we use `https://acme-v02.api.letsencrypt.org/directory` for this. Finally, we use the `-d` option to specify the main domain and wildcard subdomains for certificates (replacing `your.host.example.org` with the domain you configured).
 
-```
+~~~~~~~~
 $ sudo certbot-auto certonly --manual --preferred-challenges=dns --email mail@host.com --server https://acme-v02.api.letsencrypt.org/directory --agree-tos -d your.host.example.org -d *.your.host.example.org
-```
+~~~~~~~~
 
 This may take a short time to run, but once it gets going you will be asked to create a `TXT` record for your domain and pasting in the values they give you (note, it should ask you to add two records, one for the root domain and one for the wildcard subdomains). This is a [DNS challenge](https://letsencrypt.org/docs/challenge-types/) that verifies the domain is genuinely pointing at the address of your pi. To set this up, you must once again go to the DNS records management page for the domain you're using (the same page the `A` records were added), but this time add a new `TXT` record. `certbot` should tell you what the name and value should be (though note that on GoDaddy at least, the name should just be the lowest level domain, i.e. just `_acme-challenge`). The value will be a unique generated string of characters you can copy and paste in. Once you've added the `TXT` record, you will have to wait a short time for DNS propagation as before. As long as the majority of nameservers are updated, it should be fine to continue - you can check the propagation of different records for a given domain at [https://www.whatsmydns.net](https://www.whatsmydns.net).
 
-![image-20210302155540359](C:\Users\2013b\AppData\Roaming\Typora\typora-user-images\image-20210302155540359.png)
+![image-20210302155540359](../images/posts/txtrecords.png)
 
 Once the changes have propagated to most of the nameservers, you can go ahead and continue with `certbot`.
 
@@ -141,10 +177,10 @@ Once the changes have propagated to most of the nameservers, you can go ahead an
 
 In order for the server to have access to the newly generated SSL files, we do have to change some permissions, otherwise errors will occur. To do this, run the following commands:
 
-```
+~~~~~~~~
 $ sudo chmod -R 755 /etc/letsencrypt/live/
 $ sudo chmod -R 755 /etc/letsencrypt/archive/
-```
+~~~~~~~~
 
 This ensures that the server works - the second command is actually omitted from the official NSS guide, but I discovered the `live` directory merely contained symbolic links to files in the `archive` directory, so this is a necessity.
 
@@ -152,7 +188,7 @@ This ensures that the server works - the second command is actually omitted from
 
 At this point, you should be able to run the server - but it may not work correctly. Unfortunately, NSS doesn't provide a HTTP to HTTPS redirect service, so people trying to connect to the server with HTTP instead of HTTPS may not be able to authenticate or view/modify their data. Therefore we must setup a reverse proxy to do it for us. The [official NSS guide](https://solidproject.org//self-hosting/nss) does include details on setting up Nginx or Apache for this purpose, so you could try those - but I decided to resolve the problem myself with a [basic HTTP Python server](https://github.com/SpectralCascade/http2https) that redirects all requests to HTTPS. This means you will need Python 3 installed on your pi. All it does is take a HTTP request (on port 8080 by default - though you should run it on port 80 ideally) and redirects to the HTTPS version of the URL so NSS can handle it. Here's the steps to get it up and running on port 80:
 
-```
+~~~~~~~~
 $ sudo apt-get install python3
 $ sudo apt-get install git-scm
 $ cd ~
@@ -161,7 +197,7 @@ $ cd http2https
 $ sudo ln -s /usr/local/bin/http2https.py /home/pi/http2https.py
 $ sudo ln -s /usr/bin/http2https.py /home/pi/http2https.py
 $ sudo python3 http2https.py 80
-```
+~~~~~~~~
 
 Note the `ln` commands here where we create symbolic links to the `http2https` script in the user binary directories so it can be run from anywhere (note this assumes your user is called `pi`, if it's different you need to change these commands accordingly).
 
@@ -177,23 +213,23 @@ Should your pi reboot for whatever reason, or the server crashes, then at presen
 
 We will need this for both NSS and the Python 3 reverse proxy. First and foremost however, we will create a user to deal with these for us. Run the following commands to create a new user named `solid` (don't just copy paste these - remember to change `your.host.example.org` to whatever your domain is):
 
-```
+~~~~~~~~
 $ sudo adduser --system --ingroup www-data --no-create-home solid
 $ cd /var/www/your.host.example.org/
 $ sudo chown solid:www-data config.json
 $ sudo chown solid:www-data -R config/ data/ .db/
-```
+~~~~~~~~
 
 This creates the new `solid` user which will have control over the Solid server and reverse proxy. Next, we must create files for the services that tells `systemd` how to run NSS and the reverse proxy:
 
-```
+~~~~~~~~
 $ sudo touch /lib/systemd/system/solid.service
 $ sudo touch /lib/systemd/system/http2https.service
-```
+~~~~~~~~
 
 Once these files are created, you can go ahead and edit them with the text editor of your choice. For this example, I will use `nano` with the command `sudo nano /lib/systemd/system/solid.service` to edit the Solid service first. Copy and paste the following but change the working directory folder `your.host.example.org` to whatever your domain name is and save the file:
 
-```
+~~~~~~~~
 [Unit]
 Description=solid - Social Linked Data
 Documentation=https://github.com/solid/node-solid-server
@@ -208,11 +244,11 @@ Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
-```
+~~~~~~~~
 
 In essence, this file specifies what the service is, the working directory it should execute in, what the command should be to start it, and that it should restart on failure. The `https2https` service is similar - this time edit the `http2https.service` file with the command `sudo nano /lib/systemd/system/http2https.service` and copy-paste the following:
 
-```
+~~~~~~~~
 [Unit]
 Description=Python3 HTTP server that auto-redirects to HTTPS
 
@@ -225,14 +261,14 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
-```
+~~~~~~~~
 
 Note the line `AmbientCapabilities=CAP_NET_BIND_SERVICE` - this allows the service to run the server on port 80, a necessity as this is the default port used with HTTP. Once you've saved this file and returned to bash, enter the command `sudo systemctl daemon-reload` to reload the `systemd` services daemon such that the file changes are detected, then run the following to start NSS and the reverse proxy (make sure you stopped the previously running NSS and reverse proxy program instances first):
 
-```
+~~~~~~~~
 $ sudo systemctl start solid.service
 $ sudo systemctl start http2https.service
-```
+~~~~~~~~
 
 Now whenever your pi reboots or there's a failure, the servers will automagically restart for you.
 
