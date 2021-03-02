@@ -152,7 +152,7 @@ When you add or modify DNS records, the changes take some time to apply due to D
 
 A requirement of Solid pod servers is that they should provide HTTP over SSL (Secure Socket Layer) which ensures that all requests are securely encrypted. In order to verify this encryption, you need to get an SSL certificate and keep it up-to-date. While there are paid SSL certification services, you can easily setup SSL for free using [Let's Encrypt](https://letsencrypt.org). There is a [brief section in the official NSS setup guide](https://solidproject.org//self-hosting/nss) that details everything we need to download, install and run `certbot-auto` to verify both the root domain and wildcard subdomain certificates, though I've noticed a couple of issues with it so I've made some changes - follow these steps on the pi:
 
-~~~~~~~~
+~~~~~~~~bash
 $ wget https://dl.eff.org/certbot-auto
 $ sudo mv certbot-auto /usr/local/bin/certbot-auto
 $ sudo chown root /usr/local/bin/certbot-auto
@@ -163,7 +163,7 @@ First the certification program `certbot-auto` is downloaded, moved into the use
 
 Now we run `certbot-auto` with `--manual` and `--agree-tos` set so we can manually verify the domain and automatically agree to the terms of service respectively. We also set `--preferred-challenges=dns` such that the domain validation can be done via `TXT` records in our domain DNS settings. We must also set an email address to register (also for recovery in case of a problem), using `--email` followed by any contact addresses (in this example `mail@host.com` should be replaced by your actual email address). We also specify the web server used to verify the DNS challenges with `--server` followed by the URL; we use `https://acme-v02.api.letsencrypt.org/directory` for this. Finally, we use the `-d` option to specify the main domain and wildcard subdomains for certificates (replacing `your.host.example.org` with the domain you configured).
 
-~~~~~~~~
+~~~~~~~~bash
 $ sudo certbot-auto certonly --manual --preferred-challenges=dns --email mail@host.com --server https://acme-v02.api.letsencrypt.org/directory --agree-tos -d your.host.example.org -d *.your.host.example.org
 ~~~~~~~~
 
@@ -177,7 +177,7 @@ Once the changes have propagated to most of the nameservers, you can go ahead an
 
 In order for the server to have access to the newly generated SSL files, we do have to change some permissions, otherwise errors will occur. To do this, run the following commands:
 
-~~~~~~~~
+~~~~~~~~bash
 $ sudo chmod -R 755 /etc/letsencrypt/live/
 $ sudo chmod -R 755 /etc/letsencrypt/archive/
 ~~~~~~~~
@@ -188,7 +188,7 @@ This ensures that the server works - the second command is actually omitted from
 
 At this point, you should be able to run the server - but it may not work correctly. Unfortunately, NSS doesn't provide a HTTP to HTTPS redirect service, so people trying to connect to the server with HTTP instead of HTTPS may not be able to authenticate or view/modify their data. Therefore we must setup a reverse proxy to do it for us. The [official NSS guide](https://solidproject.org//self-hosting/nss) does include details on setting up Nginx or Apache for this purpose, so you could try those - but I decided to resolve the problem myself with a [basic HTTP Python server](https://github.com/SpectralCascade/http2https) that redirects all requests to HTTPS. This means you will need Python 3 installed on your pi. All it does is take a HTTP request (on port 8080 by default - though you should run it on port 80 ideally) and redirects to the HTTPS version of the URL so NSS can handle it. Here's the steps to get it up and running on port 80:
 
-~~~~~~~~
+~~~~~~~~bash
 $ sudo apt-get install python3
 $ sudo apt-get install git-scm
 $ cd ~
@@ -213,7 +213,7 @@ Should your pi reboot for whatever reason, or the server crashes, then at presen
 
 We will need this for both NSS and the Python 3 reverse proxy. First and foremost however, we will create a user to deal with these for us. Run the following commands to create a new user named `solid` (don't just copy paste these - remember to change `your.host.example.org` to whatever your domain is):
 
-~~~~~~~~
+~~~~~~~~bash
 $ sudo adduser --system --ingroup www-data --no-create-home solid
 $ cd /var/www/your.host.example.org/
 $ sudo chown solid:www-data config.json
@@ -222,14 +222,14 @@ $ sudo chown solid:www-data -R config/ data/ .db/
 
 This creates the new `solid` user which will have control over the Solid server and reverse proxy. Next, we must create files for the services that tells `systemd` how to run NSS and the reverse proxy:
 
-~~~~~~~~
+~~~~~~~~bash
 $ sudo touch /lib/systemd/system/solid.service
 $ sudo touch /lib/systemd/system/http2https.service
 ~~~~~~~~
 
 Once these files are created, you can go ahead and edit them with the text editor of your choice. For this example, I will use `nano` with the command `sudo nano /lib/systemd/system/solid.service` to edit the Solid service first. Copy and paste the following but change the working directory folder `your.host.example.org` to whatever your domain name is and save the file:
 
-~~~~~~~~
+~~~~~~~~bash
 [Unit]
 Description=solid - Social Linked Data
 Documentation=https://github.com/solid/node-solid-server
@@ -248,7 +248,7 @@ WantedBy=multi-user.target
 
 In essence, this file specifies what the service is, the working directory it should execute in, what the command should be to start it, and that it should restart on failure. The `https2https` service is similar - this time edit the `http2https.service` file with the command `sudo nano /lib/systemd/system/http2https.service` and copy-paste the following:
 
-~~~~~~~~
+~~~~~~~~bash
 [Unit]
 Description=Python3 HTTP server that auto-redirects to HTTPS
 
@@ -265,7 +265,7 @@ WantedBy=multi-user.target
 
 Note the line `AmbientCapabilities=CAP_NET_BIND_SERVICE` - this allows the service to run the server on port 80, a necessity as this is the default port used with HTTP. Once you've saved this file and returned to bash, enter the command `sudo systemctl daemon-reload` to reload the `systemd` services daemon such that the file changes are detected, then run the following to start NSS and the reverse proxy (make sure you stopped the previously running NSS and reverse proxy program instances first):
 
-~~~~~~~~
+~~~~~~~~bash
 $ sudo systemctl start solid.service
 $ sudo systemctl start http2https.service
 ~~~~~~~~
