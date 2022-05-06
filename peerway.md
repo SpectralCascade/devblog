@@ -16,7 +16,7 @@ Taking part will involve installing the app, answering some questions and carryi
 
 If you can take part in an interview, please do get in touch with me via lanetn@cardiff.ac.uk - it makes it easier for me to clarify questions and tasks as well as giving me real-time feedback on your experience using the app. If you do wish to take the interview however, please do not fill in the questionnaire as the interview will cover those questions and tasks.
 
-All the details you need to know are available in this [Participant Information Sheet]("PIS.pdf").
+All the details you need to know are available in this [Participant Information Sheet](PIS.pdf).
 If you don't want to participate in an interview but you are happy to complete the questionnaire, please go ahead and fill it out at [https://forms.gle/z53bRQFw9F7gbDUaA](https://docs.google.com/forms/d/e/1FAIpQLScRbrLdmNJsRg91ER6oMjDKGFwcmnFvLv4tFesZpBpFHrxd-g/viewform?usp=sf_link)
 
 ### Instructions for installing and running the app
