@@ -20,6 +20,7 @@ All the details you need to know are available in this [Participant Information 
 If you don't want to participate in an interview but you are happy to complete the questionnaire, please go ahead and fill it out at [https://forms.gle/z53bRQFw9F7gbDUaA](https://docs.google.com/forms/d/e/1FAIpQLScRbrLdmNJsRg91ER6oMjDKGFwcmnFvLv4tFesZpBpFHrxd-g/viewform?usp=sf_link)
 
 ### Instructions for installing and running the app
+To do this you *must* have a working Android device.
 1. [Tap here](https://github.com/SpectralCascade/peerway/releases/download/v2022.05.06.a1/peerway-2022.05.06a1.apk) to download the app to your Android device
 2. Open the file once it is downloaded to install it. You may be asked to give permission to trust apps/APK files from 3rd parties - if so, you need to follow the link to do so before the app can be installed.
 3. Once you have installed the app, it should appear under your apps named Peerway. Tap on the icon to run the app.
