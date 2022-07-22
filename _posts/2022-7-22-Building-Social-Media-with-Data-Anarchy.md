@@ -1,0 +1,13 @@
+---
+layout: post
+title: Data Anarchy: Building a Social Media Platform Where Users Control Their Data
+---
+
+Despite the introduction of various laws and measures seeking to regulate digital data in the past few decades, there are still a huge number of issues surrounding data privacy and data control that have not been addressed. While major laws and regulations such as GDPR and PIPL do have a significant influence globally they only capture a small subset of problems surrounding data as they focus primarily upon personal data. From a technical perspective, centralised web applications are also inherently unstable as they can become a single point of failure. In the last couple of years, services such as [Cloudflare](https://blog.cloudflare.com/cloudflare-outage-on-july-17-2020/) and [Facebook](https://www.theverge.com/2021/10/4/22708989/instagram-facebook-outage-messenger-whatsapp-error) have suffered from huge problems where their services have become unavailable, causing issues for many users across the world.
+
+In this project, I propose and develop a prototype social media platform that doesn't require a central server to host data, instead storing data on the user's own device - a concept I call data anarchy. Supporting servers are used to form temporary peer-to-peer connections between users but do not store any data (not even a cache), unlike existing decentralised social networks such as [Mastodon which store all data on server instances](https://www.theverge.com/2017/4/7/15183128/mastodon-open-source-twitter-clone-how-to-use). This means that a user is solely responsible for the creation and sharing of their own data, with the power to limit who can access it - greatly improving data privacy and user control of their own data.
+
+With [modern internet connectivity](https://www.ookla.com/articles/world-internet-speeds-july-2021) and recent [increases in mobile storage capabilities](https://www.counterpointresearch.com/average-storage-capacity-smartphones-cross-80gb-end-2019/), this technology seems feasible. This is a broad project but primarily focuses on building a proof-of-concept prototype for Android devices which seeks to emulate common features of social media while relying entirely on the unique data anarchy concept. Additional topics covered range from network design and security to issues around moderation and ways to use storage efficiently without significantly impacting usability.
+
+[Check out the full project here](1-report.pdf).
+Additional project files including the initial report are available [here](https://pats.cs.cf.ac.uk/!archive_desc?p=2316).
