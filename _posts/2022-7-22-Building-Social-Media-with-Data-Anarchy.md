@@ -9,5 +9,5 @@ In this project, I propose and develop a prototype social media platform that do
 
 With [modern internet connectivity](https://www.ookla.com/articles/world-internet-speeds-july-2021) and recent [increases in mobile storage capabilities](https://www.counterpointresearch.com/average-storage-capacity-smartphones-cross-80gb-end-2019/), this technology seems feasible. This is a broad project but primarily focuses on building a proof-of-concept prototype for Android devices which seeks to emulate common features of social media while relying entirely on the unique data anarchy concept. Additional topics covered range from network design and security to issues around moderation and ways to use storage efficiently without significantly impacting usability.
 
-[Check out the full project here](1-report.pdf).
+[Check out the full project here](/1-report.pdf).
 Additional project files including the initial report are available [here](https://pats.cs.cf.ac.uk/!archive_desc?p=2316).
