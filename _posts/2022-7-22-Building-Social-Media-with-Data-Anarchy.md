@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Data Anarchy: Building a Social Media Platform Where Users Control Their Data
+title: Data Anarchy - Building a Social Media Platform Where Users Control Their Data
 ---
 
 Despite the introduction of various laws and measures seeking to regulate digital data in the past few decades, there are still a huge number of issues surrounding data privacy and data control that have not been addressed. While major laws and regulations such as GDPR and PIPL do have a significant influence globally they only capture a small subset of problems surrounding data as they focus primarily upon personal data. From a technical perspective, centralised web applications are also inherently unstable as they can become a single point of failure. In the last couple of years, services such as [Cloudflare](https://blog.cloudflare.com/cloudflare-outage-on-july-17-2020/) and [Facebook](https://www.theverge.com/2021/10/4/22708989/instagram-facebook-outage-messenger-whatsapp-error) have suffered from huge problems where their services have become unavailable, causing issues for many users across the world.
